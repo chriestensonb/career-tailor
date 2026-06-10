@@ -1,0 +1,132 @@
+/* Resume default style — edit via try_tweak.py to evolve your preferences */
+
+@page {
+    margin: 0.55in 0.65in;
+    size: letter;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.35;
+    color: #2a2a2e;
+    margin: 0;
+}
+
+header {
+    margin-bottom: 8pt;
+}
+
+h1 {
+    font-size: 20pt;
+    font-weight: 700;
+    margin: 0 0 2pt 0;
+    letter-spacing: -0.02em;
+    color: #3b3f6b;
+}
+
+.contact {
+    font-size: 9pt;
+    color: #6b6f8a;
+    margin: 0;
+}
+
+.contact a {
+    color: #6b6f8a;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.contact a:hover {
+    color: #3b3f6b;
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #5a5f96;
+    border-bottom: 0.75pt solid #a9adcc;
+    margin: 9pt 0 4pt 0;
+    padding-bottom: 1.5pt;
+}
+
+.job {
+    margin-bottom: 6pt;
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.job-title {
+    font-weight: 600;
+    font-size: 10pt;
+    color: #3b3f6b;
+}
+
+.job-company {
+    font-weight: 400;
+    font-size: 10pt;
+    color: #4a4e78;
+}
+
+.job-meta {
+    font-size: 8.5pt;
+    color: #8a8eaa;
+    margin: 0 0 2pt 0;
+}
+
+ul {
+    margin: 0;
+    padding-left: 12pt;
+}
+
+li {
+    margin-bottom: 1pt;
+    font-size: 9.5pt;
+    color: #2a2a2e;
+}
+
+.skills {
+    font-size: 9.5pt;
+    margin: 2pt 0 0 0;
+    color: #2a2a2e;
+}
+
+.edu {
+    margin-bottom: 5pt;
+    page-break-inside: avoid;
+}
+
+.edu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.edu-degree {
+    font-weight: 600;
+    font-size: 10pt;
+    color: #3b3f6b;
+}
+
+.edu-dates {
+    font-size: 8.5pt;
+    color: #8a8eaa;
+}
+
+.edu-highlights {
+    margin: 1pt 0 0 0;
+    padding-left: 12pt;
+}
+
+.edu-highlights li {
+    font-size: 9pt;
+}
