@@ -18,7 +18,7 @@ material for every application.
 ## Install
 
 ```bash
-uvx --from git+https://github.com/chriestensonb/career-tailor career-tailor --help
+uvx career-tailor --help
 ```
 
 For local development:
@@ -28,6 +28,12 @@ git clone https://github.com/chriestensonb/career-tailor.git
 cd career-tailor
 uv sync
 cp .env.example .env
+```
+
+You can also run the latest unreleased GitHub version directly:
+
+```bash
+uvx --from git+https://github.com/chriestensonb/career-tailor career-tailor --help
 ```
 
 Set your model provider key in `.env`. By default the project uses a Pydantic AI
