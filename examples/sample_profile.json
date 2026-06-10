@@ -1,0 +1,112 @@
+{
+  "full_name": "Jordan Avery",
+  "email": "jordan@example.com",
+  "phone": "555-0100",
+  "location": "Remote, USA",
+  "github_url": "https://github.com/example/jordan",
+  "website_url": "https://example.com/jordan",
+  "summary": "Software engineer with experience building Python tools, API integrations, and CI workflows for small engineering teams.",
+  "jobs": [
+    {
+      "company": "Harbor Analytics",
+      "role": "Software Engineer",
+      "employment_type": "full-time",
+      "start_date": "2021",
+      "end_date": "2025",
+      "location": "Remote",
+      "remote": true,
+      "summary": "Built internal developer tools and automation for data teams.",
+      "responsibilities": [
+        "Built Python command line tools that automated recurring data-quality checks for analysts.",
+        "Maintained GitHub Actions workflows for tests, linting, and internal package publishing.",
+        "Added structured logging and dashboards for scheduled ingestion jobs.",
+        "Wrote onboarding documentation for repeatable release and incident workflows."
+      ],
+      "achievements": [
+        "Reduced manual release checklist work by replacing repeated steps with CLI commands.",
+        "Improved failure visibility for scheduled jobs by adding structured logs and dashboards."
+      ],
+      "skills_used": ["Python", "GitHub Actions", "CLI design", "Observability"],
+      "keywords": ["developer tooling", "release automation", "package publishing"]
+    },
+    {
+      "company": "Cedar Apps",
+      "role": "Junior Developer",
+      "employment_type": "full-time",
+      "start_date": "2019",
+      "end_date": "2021",
+      "location": "Remote",
+      "remote": true,
+      "summary": "Supported internal operations tools and API integrations.",
+      "responsibilities": [
+        "Integrated third-party APIs into internal operations tools.",
+        "Created small automation scripts that reduced manual spreadsheet updates.",
+        "Documented support playbooks for common customer data issues."
+      ],
+      "achievements": [
+        "Helped support staff resolve common data issues with documented scripts and playbooks."
+      ],
+      "skills_used": ["Python", "APIs", "Technical writing"],
+      "keywords": ["operations automation", "API integration"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "State University",
+      "degree": "B.S. Computer Science",
+      "field": "Computer Science",
+      "end_date": "2019"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Python",
+      "category": "programming_language",
+      "proficiency": "proficient",
+      "years": 5
+    },
+    {
+      "name": "GitHub Actions",
+      "category": "tool",
+      "proficiency": "proficient",
+      "years": 3
+    },
+    {
+      "name": "CLI design",
+      "category": "methodology",
+      "proficiency": "proficient",
+      "years": 3
+    },
+    {
+      "name": "API integration",
+      "category": "domain",
+      "proficiency": "proficient",
+      "years": 4
+    },
+    {
+      "name": "Observability",
+      "category": "tool",
+      "proficiency": "familiar",
+      "years": 2
+    },
+    {
+      "name": "Technical writing",
+      "category": "soft",
+      "proficiency": "proficient",
+      "years": 5
+    }
+  ],
+  "projects": [
+    {
+      "name": "Release Helper",
+      "description": "A small CLI that generated changelog drafts and checked package metadata before release.",
+      "skills_used": ["Python", "CLI design", "Package publishing"],
+      "highlights": [
+        "Checked release metadata before internal package publication.",
+        "Generated changelog drafts from structured commit notes."
+      ]
+    }
+  ],
+  "last_updated": "2026-06-10",
+  "notes": []
+}

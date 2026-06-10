@@ -15,6 +15,10 @@ the same language as the job posting. Career Tailor helps job seekers build
 truthful, role-specific versions of a resume without manually rewriting the same
 material for every application.
 
+Career Tailor is also designed to be friendly to coding agents. A user or agent
+can keep a private structured profile locally, pass in a job description, and
+generate reviewable Markdown/JSON output before deciding what to export or send.
+
 ## Install
 
 ```bash
@@ -75,6 +79,21 @@ The default profile path is `data/profile.json`. Generated outputs go to
 `tailored/`. Both directories are ignored by Git because they commonly contain
 personal information.
 
+## Example
+
+The `examples/` directory contains fake sample data for trying the CLI without
+using a real resume:
+
+```bash
+career-tailor tailor examples/sample_job_description.md \
+  --profile examples/sample_profile.json \
+  --output-dir tailored-demo \
+  --no-pdf
+```
+
+The example is intentionally fictional. Do not commit generated outputs from real
+resume data.
+
 ## Data And Privacy
 
 Career Tailor runs locally, but it sends resume and job description text to the
@@ -106,4 +125,18 @@ uv run playwright install chromium
 
 This is early alpha software. It is useful as a local CLI today, and the next
 good open-source milestones are provider examples, safer redaction workflows,
-more resume import formats, and package publishing.
+more resume import formats, and better agent-facing workflows. See
+`ROADMAP.md` for the current plan.
+
+## API Credits And Maintainer Automation
+
+API credits would directly support core open-source work for this project:
+
+- regression tests that compare generated resumes against source profiles
+- privacy and redaction checks before model-provider calls
+- example workflows across OpenAI, Anthropic, and local development setups
+- issue triage, PR review, release-note drafting, and package-publishing checks
+- agent-friendly documentation so coding assistants can discover and use the CLI
+
+The goal is to make resume tailoring safer, more transparent, and easier for
+job seekers to run locally while keeping private career data out of Git history.
