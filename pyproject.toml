@@ -39,6 +39,7 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
+package-dir = { "" = "src" }
 packages = [
     "brave_search",
     "career_agent",

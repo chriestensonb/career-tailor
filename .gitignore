@@ -9,6 +9,7 @@ __pycache__/
 .DS_Store
 data/
 tailored/
+tailored-demo/
 dist/
 build/
 *.egg-info/

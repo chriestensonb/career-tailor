@@ -121,6 +121,14 @@ If PDF rendering fails the first time, install Playwright's Chromium browser:
 uv run playwright install chromium
 ```
 
+## Project Layout
+
+- `src/` contains the importable Python packages and CLI entry point.
+- `examples/` contains fictional sample data for demos and tests.
+- `scripts/` contains local development helpers and manual smoke-test scripts.
+- `.github/workflows/` contains CI and PyPI publishing workflows.
+- `data/` and `tailored/` are local-only output folders ignored by Git.
+
 ## Project Status
 
 This is early alpha software. It is useful as a local CLI today, and the next

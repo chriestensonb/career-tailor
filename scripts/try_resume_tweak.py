@@ -32,7 +32,10 @@ trace.set_tracer_provider(provider)
 def _pick_resume() -> Path:
     saved = list_tailored()
     if not saved:
-        print("No saved resumes found in tailored/. Run try_builder.py first.")
+        print(
+            "No saved resumes found in tailored/. "
+            "Run scripts/try_resume_build.py first."
+        )
         raise SystemExit(1)
     print("Saved resumes:")
     for i, path in enumerate(saved, 1):
