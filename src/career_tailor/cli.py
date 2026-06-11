@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import os
 import sys
 from datetime import date
 from pathlib import Path
@@ -13,9 +14,56 @@ from resume_data import load_profile, save_profile
 from resume_ingest import IngestDeps, cli_ask_user, from_file, from_text, ingest
 
 
+class CLIError(Exception):
+    """A user-facing command-line error."""
+
+
+_PROVIDER_KEYS = {
+    "anthropic": "ANTHROPIC_API_KEY",
+    "openai": "OPENAI_API_KEY",
+}
+
+
+def _format_path(path: Path) -> str:
+    return str(path.expanduser())
+
+
+def _require_provider_key() -> None:
+    model = os.environ.get("CAREER_TAILOR_MODEL", "anthropic:claude-sonnet-4-6")
+    provider, has_separator, _ = model.partition(":")
+    if not has_separator:
+        raise CLIError(
+            "CAREER_TAILOR_MODEL must include a provider prefix, for example "
+            "'anthropic:claude-sonnet-4-6' or 'openai:<model-name>'."
+        )
+
+    env_var = _PROVIDER_KEYS.get(provider)
+    if env_var is None:
+        known = ", ".join(sorted(_PROVIDER_KEYS))
+        raise CLIError(
+            f"Unsupported model provider '{provider}' in CAREER_TAILOR_MODEL. "
+            f"Known providers: {known}."
+        )
+    if not os.environ.get(env_var):
+        raise CLIError(
+            f"Missing {env_var} for CAREER_TAILOR_MODEL='{model}'. "
+            f"Add {env_var}=... to your env file or shell environment, or choose "
+            "a model provider you have configured."
+        )
+
+
 def _read_stdin_or_file(path: str | None, prompt: str) -> str:
     if path:
-        return from_file(Path(path))
+        source = Path(path)
+        try:
+            return from_file(source)
+        except FileNotFoundError as exc:
+            raise CLIError(
+                f"Input file not found: {_format_path(source)}. "
+                "Check the path or omit it to paste text via stdin."
+            ) from exc
+        except ValueError as exc:
+            raise CLIError(str(exc)) from exc
     if sys.stdin.isatty():
         print(prompt)
     return from_text(sys.stdin.read())
@@ -44,7 +92,15 @@ async def _ingest(args: argparse.Namespace) -> int:
 
 
 async def _tailor(args: argparse.Namespace) -> int:
-    profile = load_profile(Path(args.profile))
+    profile_path = Path(args.profile)
+    try:
+        profile = load_profile(profile_path)
+    except FileNotFoundError as exc:
+        raise CLIError(
+            f"Profile JSON not found: {_format_path(profile_path)}. "
+            "Run 'career-tailor ingest <resume.md>' first, or pass an existing "
+            "profile with '--profile <path>'."
+        ) from exc
     jd_text = _read_stdin_or_file(
         args.job_description,
         "Paste the job description, then press Ctrl+D when done:",
@@ -61,7 +117,21 @@ async def _tailor(args: argparse.Namespace) -> int:
     if args.pdf:
         pdf_path = base.with_suffix(".pdf")
         async with spinner("Rendering PDF"):
-            await to_pdf(resume.to_html(css), pdf_path)
+            try:
+                await to_pdf(resume.to_html(css), pdf_path)
+            except Exception as exc:
+                message = str(exc)
+                missing_browser = (
+                    "playwright install" in message
+                    or "Executable doesn't exist" in message
+                )
+                if missing_browser:
+                    raise CLIError(
+                        "PDF rendering needs Playwright's Chromium browser. "
+                        "Install it with: uv run playwright install chromium. "
+                        "You can also rerun this command with '--no-pdf'."
+                    ) from exc
+                raise
         print(f"Saved PDF: {pdf_path}")
     return 0
 
@@ -128,7 +198,12 @@ async def _run(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     load_dotenv(args.env_file)
     configure_logging()
-    return await args.func(args)
+    try:
+        _require_provider_key()
+        return await args.func(args)
+    except CLIError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
 
 def main() -> None:
