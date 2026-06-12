@@ -158,3 +158,52 @@ async def test_pdf_browser_error_mentions_playwright_install(
     err = capsys.readouterr().err
     assert "uv run playwright install chromium" in err
     assert "--no-pdf" in err
+
+
+@pytest.mark.asyncio
+async def test_scan_does_not_require_provider_key(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    output = tmp_path / "resume.md"
+    output.write_text("Clean generated output.")
+
+    code = await cli._run(
+        ["--env-file", "does-not-exist.env", "scan", str(tmp_path)]
+    )
+
+    assert code == 0
+    assert "Privacy scan passed: 1 file(s) scanned." in capsys.readouterr().out
+
+
+@pytest.mark.asyncio
+async def test_scan_returns_one_when_findings_exist(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    output = tmp_path / "resume.md"
+    output.write_text("Contact me at jane@example.com")
+
+    code = await cli._run(
+        ["--env-file", "does-not-exist.env", "scan", str(tmp_path)]
+    )
+
+    assert code == 1
+    out = capsys.readouterr().out
+    assert "Privacy scan found 1 possible issue" in out
+    assert "email" in out
+
+
+@pytest.mark.asyncio
+async def test_scan_missing_path_has_actionable_error(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    code = await cli._run(
+        ["--env-file", "does-not-exist.env", "scan", str(tmp_path / "missing")]
+    )
+
+    assert code == 2
+    assert "Scan path not found" in capsys.readouterr().err

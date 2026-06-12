@@ -7,6 +7,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from career_tailor.privacy import format_findings, scan_paths
 from common.cli import spinner
 from common.telemetry import configure_logging
 from resume_builder import build, load_css, stem_for, to_pdf
@@ -136,6 +137,33 @@ async def _tailor(args: argparse.Namespace) -> int:
     return 0
 
 
+async def _scan(args: argparse.Namespace) -> int:
+    paths = [Path(path) for path in args.paths]
+    try:
+        result = scan_paths(paths)
+    except FileNotFoundError as exc:
+        missing = Path(exc.filename or exc.args[0])
+        raise CLIError(f"Scan path not found: {_format_path(missing)}") from exc
+
+    if result.findings:
+        print(
+            f"Privacy scan found {len(result.findings)} possible issue(s) "
+            f"across {result.files_scanned} scanned file(s):"
+        )
+        for line in format_findings(result.findings):
+            print(line)
+        print(
+            "Review these best-effort findings before sharing, committing, "
+            "or uploading generated outputs."
+        )
+        return 1
+
+    print(f"Privacy scan passed: {result.files_scanned} file(s) scanned.")
+    if result.skipped_paths and args.verbose:
+        print(f"Skipped {len(result.skipped_paths)} unsupported file(s).")
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="career-tailor",
@@ -159,7 +187,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default="data/profile.json",
         help="Profile JSON output path. Default: data/profile.json",
     )
-    ingest_parser.set_defaults(func=_ingest)
+    ingest_parser.set_defaults(func=_ingest, needs_model_provider=True)
 
     tailor_parser = subparsers.add_parser(
         "tailor",
@@ -189,7 +217,25 @@ def _build_parser() -> argparse.ArgumentParser:
         default=True,
         help="Render a PDF with Playwright. Default: true",
     )
-    tailor_parser.set_defaults(func=_tailor)
+    tailor_parser.set_defaults(func=_tailor, needs_model_provider=True)
+
+    scan_parser = subparsers.add_parser(
+        "scan",
+        help="Scan generated output files for common accidental privacy leaks.",
+    )
+    scan_parser.add_argument(
+        "paths",
+        nargs="+",
+        help="Files or directories to scan. Supports .md, .json, .css, .html, .txt.",
+    )
+    scan_parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Show unsupported skipped file count.",
+    )
+    scan_parser.set_defaults(func=_scan, needs_model_provider=False)
+
     return parser
 
 
@@ -199,7 +245,8 @@ async def _run(argv: list[str] | None = None) -> int:
     load_dotenv(args.env_file)
     configure_logging()
     try:
-        _require_provider_key()
+        if getattr(args, "needs_model_provider", True):
+            _require_provider_key()
         return await args.func(args)
     except CLIError as exc:
         print(f"error: {exc}", file=sys.stderr)

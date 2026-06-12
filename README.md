@@ -75,6 +75,12 @@ Skip PDF rendering when you only want Markdown and JSON:
 career-tailor tailor ./job-description.md --no-pdf
 ```
 
+Scan generated outputs before sharing or committing them:
+
+```bash
+career-tailor scan tailored/
+```
+
 The default profile path is `data/profile.json`. Generated outputs go to
 `tailored/`. Both directories are ignored by Git because they commonly contain
 personal information.
@@ -106,6 +112,13 @@ The repository ignores:
 - `data/`, which stores extracted profile data
 - `tailored/`, which stores generated resumes
 - local caches and virtual environments
+
+You can also run `career-tailor scan <path>` on Markdown, JSON, CSS, HTML, and
+text files. The scan checks for common accidental leaks such as email addresses,
+phone numbers, env-style secrets, API-key-shaped strings, and local absolute
+paths. It exits with status `1` when possible issues are found so it can be used
+in CI. This is a best-effort helper, not a guarantee that an output is safe to
+publish.
 
 ## Development
 
