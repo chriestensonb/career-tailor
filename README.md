@@ -25,6 +25,13 @@ generate reviewable Markdown/JSON output before deciding what to export or send.
 uvx career-tailor --help
 ```
 
+PDF export uses Playwright's Chromium browser. If you plan to generate PDFs with
+the `uvx career-tailor` command, install the matching browser dependency once:
+
+```bash
+uvx --from career-tailor playwright install chromium
+```
+
 For local development:
 
 ```bash
@@ -32,6 +39,7 @@ git clone https://github.com/chriestensonb/career-tailor.git
 cd career-tailor
 uv sync
 cp .env.example .env
+uv run playwright install chromium
 ```
 
 You can also run the latest unreleased GitHub version directly:
@@ -73,6 +81,19 @@ Skip PDF rendering when you only want Markdown and JSON:
 
 ```bash
 career-tailor tailor ./job-description.md --no-pdf
+```
+
+If PDF rendering fails with a missing Playwright browser executable, install
+Chromium in the same environment you use to run Career Tailor:
+
+```bash
+uvx --from career-tailor playwright install chromium
+```
+
+For a cloned local checkout, use:
+
+```bash
+uv run playwright install chromium
 ```
 
 Scan generated outputs before sharing or committing them:
@@ -124,14 +145,9 @@ publish.
 
 ```bash
 uv sync --dev
+uv run playwright install chromium
 uv run pytest
 uv run ruff check .
-```
-
-If PDF rendering fails the first time, install Playwright's Chromium browser:
-
-```bash
-uv run playwright install chromium
 ```
 
 ## Project Layout
