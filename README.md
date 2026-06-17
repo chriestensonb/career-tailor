@@ -48,20 +48,27 @@ You can also run the latest unreleased GitHub version directly:
 uvx --from git+https://github.com/chriestensonb/career-tailor career-tailor --help
 ```
 
-Set your model provider key in `.env`. By default the project uses a Pydantic AI
-Anthropic model string, but OpenAI model strings are supported too:
+## Model Provider Setup
+
+Set one model provider in `.env`. `CAREER_TAILOR_MODEL` uses Pydantic AI model
+strings in the form `<provider>:<model>`.
+
+Anthropic is the default:
 
 ```bash
 CAREER_TAILOR_MODEL=anthropic:claude-sonnet-4-6
 ANTHROPIC_API_KEY=...
 ```
 
-Or:
+OpenAI uses the same pattern with an OpenAI model name and `OPENAI_API_KEY`:
 
 ```bash
-CAREER_TAILOR_MODEL=openai:<model-name>
+CAREER_TAILOR_MODEL=openai:gpt-5.5
 OPENAI_API_KEY=...
 ```
+
+Use only the key for the provider you configure. Do not commit `.env` or paste
+real provider keys into examples, issues, or generated output.
 
 ## Usage
 
@@ -117,6 +124,10 @@ career-tailor tailor examples/sample_job_description.md \
   --output-dir tailored-demo \
   --no-pdf
 ```
+
+To try the same fake-data workflow with OpenAI, set your `.env` to the OpenAI
+example in [Model Provider Setup](#model-provider-setup), then run the same
+command.
 
 The example is intentionally fictional. Do not commit generated outputs from real
 resume data.
